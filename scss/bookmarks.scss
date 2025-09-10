@@ -9,6 +9,7 @@ ul#bookmark-list {
 
   .description {
     color: $gray-color;
+    white-space: normal; // Neutralize 4get's white-space: pre-line
 
     // @media (prefers-color-scheme: dark) {
     //   color: $gray-color-dark
