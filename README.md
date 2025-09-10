@@ -1,5 +1,7 @@
 ![logo](/icons/logo_full.svg)
 
+Forked from [Fivefold/linkding-injector](https://github.com/Fivefold/linkding-injector) the `fourget` brach supports [4get](https://4get.ca) | [Repo](https://git.lolcat.ca/lolcat/4get).
+
 Community browser extension for the self-hosted [linkding](https://github.com/sissbruecker/linkding) bookmark service.
 
 ***_Ever created bookmarks, only to forget about them later? Don't regularly search within your bookmarks? This extension is designed to help with this kind of problem._***
