@@ -6,8 +6,8 @@ function getBrowser() {
   return isChrome() ? chrome : browser;
 }
 
-/* Sanitise input to prevent unwanted injection of html or even javascript 
-  through linkding search results, e.g. in the bookmark title or description 
+/* Sanitise input to prevent unwanted injection of html or even javascript
+  through linkding search results, e.g. in the bookmark title or description
 */
 function escapeHTML(str) {
   let p = document.createElement("p");
@@ -29,6 +29,8 @@ if (document.location.hostname.match(/duckduckgo\.com/)) {
   searchEngine = "kagi";
 } else if (document.location.href.match(/http.?:\/\/.+\/search/)) {
   searchEngine = "searx";
+} else if (document.location.href.match(/http.?:\/\/.+\/web(\?|$)/)) {
+  searchEngine = "fourget";
 } else if (document.location.hostname.match(/qwant\.com/)) {
   searchEngine = "qwant";
 } else {
@@ -41,6 +43,7 @@ const sidebarSelectors = {
   google: "#rhs",
   brave: "aside.sidebar",
   searx: "#sidebar",
+  fourget: ".right-wrapper .right-right",
   kagi: ".right-content-box > ._0_right_sidebar",
   qwant: ".is-sidebar",
 };
@@ -58,7 +61,7 @@ port.onMessage.addListener(function (m) {
     htmlString = `
     <div id="bookmark-list-container" class="${searchEngine}">
       <div id="navbar">
-        <a id="ld-logo">  
+        <a id="ld-logo">
           <img src=${browser.runtime.getURL("icons/logo.svg")} class="setup" />
           <h1>linkding injector</h1>
         </a>
@@ -87,6 +90,7 @@ port.onMessage.addListener(function (m) {
       google: m.config.themeGoogle,
       brave: m.config.themeBrave,
       searx: m.config.themeSearx,
+      fourget: m.config.theme4get,
       kagi: m.config.themeKagi,
       qwant: m.config.themeQwant,
     };
@@ -107,7 +111,7 @@ port.onMessage.addListener(function (m) {
     htmlString += `
     <div id="bookmark-list-container" class="${searchEngine} ${themeClass}">
       <div id="navbar">
-        <a id="ld-logo" href="${linkdingUrl}">  
+        <a id="ld-logo" href="${linkdingUrl}">
           <img src=${browser.runtime.getURL("icons/logo.svg")} />
           <h1>linkding injector</h1>
         </a>
@@ -146,9 +150,9 @@ port.onMessage.addListener(function (m) {
                 .join(" ")}
               </a>
             </span>
-    
+
             ${bookmark.tags.length > 0 ? "|" : ""}
-    
+
             <span>
               ${escapeHTML(bookmark.description)}
             </span>
@@ -201,8 +205,9 @@ let urlParams = new URLSearchParams(queryString);
 let searchTerm = escapeHTML(urlParams.get("q"));
 if (searchEngine == "searx") {
   searchTerm = escapeHTML(document.querySelector("input#q").value);
+} else if (searchEngine == "fourget") {
+  searchTerm = escapeHTML(urlParams.get("s"));
 }
-
 if (searchEngine == "brave") {
   // Brave search seems to remove the injection box if it is injected too soon.
   // Wait a bit before injecting.
@@ -221,9 +226,8 @@ if (searchEngine == "brave") {
 
   qwantObserver.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
   });
 } else {
   port.postMessage({ searchTerm: searchTerm });
 }
-

@@ -10,6 +10,7 @@
   let themeGoogle;
   let themeBrave;
   let themeSearx;
+  let theme4get;
   let themeKagi;
   let themeQwant;
   let isSuccess;
@@ -25,6 +26,7 @@
     themeGoogle = config.themeGoogle;
     themeBrave = config.themeBrave;
     themeSearx = config.themeSearx;
+    theme4get = config.theme4get;
     themeKagi = config.themeKagi;
     themeQwant = config.themeQwant;
   }
@@ -41,6 +43,7 @@
       themeGoogle,
       themeBrave,
       themeSearx,
+      theme4get,
       themeKagi,
       themeQwant,
     };
@@ -216,6 +219,21 @@
         </label>
         <label class="form-radio form-inline float-right">
           <input type="radio" bind:group={themeSearx} value="auto" />
+          <i class="form-icon" />auto (default)
+        </label>
+      </div>
+      <div class="form-group p-relative clearfix">
+        <div class="form-label float-left">4get</div>
+        <label class="form-radio form-inline float-right">
+          <input type="radio" bind:group={theme4get} value="light" />
+          <i class="form-icon" />light
+        </label>
+        <label class="form-radio form-inline float-right">
+          <input type="radio" bind:group={theme4get} value="dark" />
+          <i class="form-icon" />dark
+        </label>
+        <label class="form-radio form-inline float-right">
+          <input type="radio" bind:group={theme4get} value="auto" />
           <i class="form-icon" />auto (default)
         </label>
       </div>

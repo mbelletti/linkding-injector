@@ -17,7 +17,7 @@ div#bookmark-list-container {
       cursor: pointer;
     }
   }
-  
+
   &.google { // google-specific styles
     width: 369px;
     box-sizing: border-box;
@@ -37,11 +37,11 @@ div#bookmark-list-container {
     border: none;
     border-radius: 12px;
     font-size: 0.655rem;
-    
+
 
     #navbar #ld-logo {
       flex: 1;
-      
+
       img:not(.setup) {
         width: 35%;
       }
@@ -58,7 +58,7 @@ div#bookmark-list-container {
   &.searx { // searx-specific styles
     box-shadow: none;
   }
-  
+
   &.kagi { // kagi-specific styles
     font-size: .875rem;
   }
@@ -68,6 +68,10 @@ div#bookmark-list-container {
     border-radius: 12px;
     font-size: 14px;
     font-family: sans-serif;
+  }
+
+  &.fourget { // 4get-specific styles
+    font-size: .875rem;
   }
 
   .tags a:hover {
@@ -122,20 +126,20 @@ div#bookmark-list-container {
     background-color: $duckduckgo-bg;
     border: none;
     color: $primary-color-dark;
-    
+
     a {
       color: $primary-color-dark;
     }
-    
+
     #navbar #results_amount span {
       color: $alternative-color !important;
     }
-    
+
     .tags a {
       color: $alternative-color;
     }
-    
-    
+
+
     &.google:not(.light) {
       background-color: $google-bg;
       border: 1px solid $google-border-color-dark;
@@ -149,7 +153,7 @@ div#bookmark-list-container {
       background-color: $searx-bg-dark;
       border: 1px solid $searx-border-color-dark;
     }
-    
+
     &.kagi:not(.light) {
       background-color: $kagi-bg-dark;
       border: 1px solid $kagi-border-color-dark;
@@ -159,6 +163,11 @@ div#bookmark-list-container {
       background-color: $qwant-bg-dark;
       border: 1px solid $qwant-border-color-dark;
     }
+
+    &.fourget:not(.light) {
+      background: var(--1d2021);
+      border: 1px solid $fourget-border-color-dark;
+    }
   }
 
   /**
@@ -167,8 +176,9 @@ div#bookmark-list-container {
   .dark is the class brave search globally uses for the dark theme
   .theme-dark is the class searx globally uses for the dark theme
   .theme_dark is the class kagi globally uses for the dark theme
-  
-  .light is added if the manual white theme is set and disables these dark 
+  4get: uses prefers-color-scheme and may use body.dark or similar
+
+  .light is added if the manual white theme is set and disables these dark
   styles, while .dark activates them regardless of global theme.
   */
   @media (prefers-color-scheme: dark) {
@@ -177,11 +187,17 @@ div#bookmark-list-container {
   body[data-dt="1"] &:not(.light),                // Google
   :root:not(.light) body.is-pc &:not(.light),     // Brave Search
   html.theme-dark &:not(.light),                  // Searx
+  body[style*="--1d2021"] &:not(.light),          // 4get (CSS variable detection)
   html.theme_dark &:not(.light),                  // Kagi
   body[data-theme=dark] &:not(.light)             // Qwant
     {
       @include dark-styling;
     }
+  }
+
+  // Force dark theme for 4get when prefers-color-scheme is dark
+  &.fourget:not(.light) {
+    @include dark-styling;
   }
   // --------- dark styling end ---------
 

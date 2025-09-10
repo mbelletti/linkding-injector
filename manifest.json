@@ -39,6 +39,11 @@
       "js": ["build/searchInjection.js"]
     },
     {
+      "matches": ["*://*/web", "*://*/web?*"],
+      "css": ["build/searchInjection.css"],
+      "js": ["build/searchInjection.js"]
+    },
+    {
       "matches": ["*://*/search?*", "*://*/search"],
       "css": ["build/searchInjection.css"],
       "js": ["build/searchInjection.js"]

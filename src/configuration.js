@@ -11,6 +11,7 @@ const DEFAULT_CONFIG = {
   themeDuckduckgo: "auto",
   themeBrave: "auto",
   themeSearx: "auto",
+  theme4get: "auto",
   themeKagi: "auto",
   themeQwant: "auto",
 };
