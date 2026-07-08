@@ -46,7 +46,7 @@ Run the build as described below and then follow the instructions [here](https:/
 
 ### Chrome
 
-Run the build as described below and then follow the instructions [here](https://developer.chrome.com/docs/extensions/mv3/getstarted/#manifest) to load it into Chrome.
+Run the Chrome build (see [Building for Chrome-based browsers](#building-for-chrome-based-browsers) below), then in Chrome open `chrome://extensions`, enable "Developer mode" and use "Load unpacked" on the generated `dist-chrome/` folder (or drag `linkding-injector-chrome.zip` onto the page).
 
 ## Build
 
@@ -79,7 +79,18 @@ For developing you might prefer using `npm run dev` to create an unpackaged deve
 
 ### Building for Chrome-based browsers
 
-Chrome switched over to Manifest V3. Same build instructions as above apply, but before building you need to checkout the `chrome_manifest_v3` branch. The only relevant difference in that branch is the [manifest.json](https://github.com/Fivefold/linkding-injector/blob/master/manifest.json).
+Chrome dropped support for Manifest V2, so Chrome needs Manifest V3. This fork keeps both manifests in the same branch:
+
+- `manifest.json` - Manifest V2, used by the Firefox build (`build.sh`).
+- `manifest.chrome.json` - Manifest V3, used by the Chrome build (`build-chrome.sh`).
+
+The two only differ in the MV3-specific keys: `manifest_version`, the background (service worker vs. persistent scripts), the split of `permissions`/`host_permissions`, and the `web_accessible_resources` format. Content scripts, options page and shared logic are identical.
+
+To build for Chrome (might need `chmod +x build-chrome.sh` first):
+```bash
+./build-chrome.sh # Linux
+```
+This installs dependencies, runs the same rollup + sass build, then stages the extension into `dist-chrome/` (with `manifest.chrome.json` copied in as `manifest.json`) and zips it to `linkding-injector-chrome.zip`.
 
 ## Acknowledgements
 

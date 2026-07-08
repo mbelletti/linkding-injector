@@ -17,7 +17,27 @@ function escapeHTML(str) {
 
 const browser = getBrowser();
 
-const port = browser.runtime.connect({ name: "port-from-cs" });
+/* Lazy connection to the background script.
+
+  In Manifest V3 (Chrome) the background is a service worker that can be
+  terminated when idle. That closes this port, so a long-lived `const port`
+  created once at load would silently drop any later postMessage. Recreate the
+  port on demand and reattach the listener so a message after termination
+  reopens the connection. In Firefox (MV2, persistent background) this simply
+  keeps a single port for the page lifetime.
+*/
+let port;
+function getPort() {
+  if (!port) {
+    port = browser.runtime.connect({ name: "port-from-cs" });
+    port.onMessage.addListener(handleMessage);
+    port.onDisconnect.addListener(() => {
+      port = null;
+    });
+  }
+  return port;
+}
+
 let searchEngine;
 if (document.location.hostname.match(/duckduckgo\.com/)) {
   searchEngine = "duckduckgo";
@@ -49,7 +69,7 @@ const sidebarSelectors = {
 };
 
 // When background script answers with results, construct html for the result box
-port.onMessage.addListener(function (m) {
+function handleMessage(m) {
   const parser = new DOMParser();
   let themeClass;
   let htmlString = "";
@@ -194,10 +214,10 @@ port.onMessage.addListener(function (m) {
   // by the background script, so we need to send a message to it
   document.querySelectorAll(".openOptions").forEach((el) => {
     el.addEventListener("click", () => {
-      port.postMessage({ action: "openOptions" });
+      getPort().postMessage({ action: "openOptions" });
     });
   });
-});
+}
 
 // Start the search by sending a message to background.js with the search term
 let queryString = location.search;
@@ -212,14 +232,14 @@ if (searchEngine == "brave") {
   // Brave search seems to remove the injection box if it is injected too soon.
   // Wait a bit before injecting.
   setTimeout(function () {
-    port.postMessage({ searchTerm: searchTerm });
+    getPort().postMessage({ searchTerm: searchTerm });
   }, 1600);
 } else if (searchEngine == "qwant") {
   // Qwant asynchronously loads the sidebar. We need to watch for when the
   // sidebar is loaded and only then start the injection
   const qwantObserver = new MutationObserver((mutations, observer) => {
     if (document.querySelector(sidebarSelectors["qwant"])) {
-      port.postMessage({ searchTerm: searchTerm });
+      getPort().postMessage({ searchTerm: searchTerm });
       observer.disconnect(); // Stop observing after the element appears
     }
   });
@@ -229,5 +249,5 @@ if (searchEngine == "brave") {
     subtree: true,
   });
 } else {
-  port.postMessage({ searchTerm: searchTerm });
+  getPort().postMessage({ searchTerm: searchTerm });
 }
