@@ -1,3 +1,8 @@
+## v1.4.0 (08/07/2026)
+- [**feature**] New search engine: 4get
+- [**enhancement**] Chrome Manifest V3 support via a separate `manifest.chrome.json` and `build-chrome.sh`
+- [**enhancement**] Recreate the background connection on demand so a terminated MV3 service worker doesn't drop results
+
 ## v1.3.5 (11/05/2025)
 - [**bug**] Fix broken Qwant injection (see #30)
 - [**chore**] Bump NPM packages
